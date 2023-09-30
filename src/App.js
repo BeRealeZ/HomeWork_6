@@ -30,7 +30,7 @@ function App() {
         body: JSON.stringify({
         title: title,
         body: body,
-        userId: Math.random().toString(36).slice(2),
+        _id: Math.random().toString(36).slice(2),
         }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -42,15 +42,13 @@ function App() {
   };
 
   const deletePost = async (_id) => {
-    const response = await fetch(
-      `https://cataas.com/api/cats/${_id}`,
+    const response = await fetch(`https://cataas.com/api/cats/${_id}`,
       {
         method: "DELETE",
-      }
-    );
+      });
     if (response.status === 200) {
       setPosts((prevPosts) => {
-        return prevPosts.filter((post) => post.id !== _id);
+        return prevPosts.filter((post) => post._id !== _id);
       });
     }
   };
@@ -71,15 +69,15 @@ const updatePost = (newData, index) => {
       <AddPost addPost={addPost} />
       <section className="posts-container">
         <h2>Posts</h2>
-        {posts.map((post, index) => (
+        {posts.map((post) => (
           <Post
-            key={index}
+            key={post._id}
             id={post._id}
             images={post.url}
             tags={post.tags}
             owner={post.owner}
-            deletePost={deletePost}
-            updatePost={(newData) => updatePost(newData, index)}
+            deletePost={()=> deletePost(post._id)}
+            updatePost={(newData) => updatePost(newData, post._id)}
           />
         ))}
       </section>
